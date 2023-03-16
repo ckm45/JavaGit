@@ -56,8 +56,13 @@ public class BankAccount {
             return false;
         if (getClass() != obj.getClass())
             return false;
+
         BankAccount other = (BankAccount) obj;
-        return Objects.equals(accountNumber, other.accountNumber);
+        if (this.accountNumber.trim().equals(other.accountNumber.trim())) {
+            return true;
+        }
+
+        return false;
     }
 
 
