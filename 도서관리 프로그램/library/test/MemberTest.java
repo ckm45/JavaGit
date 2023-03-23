@@ -2,6 +2,8 @@ package com.ckm.library.test;
 
 import com.ckm.library.Member;
 import com.ckm.library.MemberFunction;
+import com.ckm.library.csv.Exportlist;
+import com.ckm.library.csv.MakeList;
 
 public class MemberTest {
     public static void main(String[] args) {
@@ -36,8 +38,9 @@ public class MemberTest {
         function.selectMembers();  //출력
         
         function.deleteMembers(3);
-        
-        
+                
+        Exportlist el = new Exportlist();
+        el.exportMember(function.getMembers());
     }
 
 }

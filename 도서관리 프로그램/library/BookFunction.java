@@ -8,7 +8,18 @@ public class BookFunction {
     Integer backUpId = null;
     BookInfo backUpBook = null;
 
-    Map<Integer, BookInfo> books = new HashMap<>();
+
+	Map<Integer, BookInfo> books = new HashMap<>();
+
+    public Map<Integer, BookInfo> getBooks() {
+ 		return books;
+ 	}
+
+ 	public void setBooks(Map<Integer, BookInfo> books) {
+ 		this.books = books;
+ 	}
+    
+
 
     public void borrowBooks() {
 
@@ -18,8 +29,10 @@ public class BookFunction {
             }
         }
     }
-
-    public void selectBooks() { // 도서 조회
+    
+ 	
+ 	
+ 	public void selectBooks() { // 도서 조회
         Set<Integer> keySet = books.keySet();
         for (Integer key : keySet) {
             System.out.println(books.get(key));
