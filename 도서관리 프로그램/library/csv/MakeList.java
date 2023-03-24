@@ -35,6 +35,7 @@ public class MakeList {
 			mem2.put(Integer.parseInt(l.get(0)), new BookInfo(l.get(1), l.get(2), Boolean.valueOf(l.get(3))));
 			booklist.add(mem2);
 		}
+
 		return booklist;
 	}
 //
