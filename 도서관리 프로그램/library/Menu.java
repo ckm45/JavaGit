@@ -57,6 +57,8 @@ public class Menu {
                 String birthday = scanner.next();
                 Member member = new Member(name, address, phoneNumber, birthday);
                 memberFunction.addMembers(member);
+                System.out.println("등록이 완료되었습니다.");
+                
                 break;
             case 3:
                 System.out.println("본인의 ID를 입력하세요: ");
@@ -74,7 +76,7 @@ public class Menu {
                 System.out.println("생일: (년/월/일 형식으로 써주세요.)");
                 String birthday1 = scanner.next();
 
-                System.out.println("등록 완료");
+                System.out.println("등록이 완료되었습니다.");
 
                 // Member memberEdit = new Member(name1, address1, phoneNumber1, birthday1);
                 memberFunction.editMembers(memberId, name1, address1, phoneNumber1, birthday1);
@@ -83,6 +85,7 @@ public class Menu {
                 System.out.println("삭제하고 싶은 회원ID: ");
                 int id = scanner.nextInt();
                 memberFunction.deleteMembers(id);
+                System.out.println("삭제 완료되었습니다.");
                 break;
             case 5:
                 System.out.println("삭제를 취소하겠습니다.");
@@ -117,7 +120,7 @@ public class Menu {
 
                 BookInfo bookInfo = new BookInfo(name, publishDate, status);
                 bookFunction.addBooks(bookInfo);
-
+                System.out.println("등록 완료되었습니다.");
                 break;
 
             case 3:
@@ -134,12 +137,14 @@ public class Menu {
                 boolean status1 = scanner.nextBoolean();
 
                 bookFunction.editBooks(memberId, name1, publishDate1, status1);
+                System.out.println("등록 완료되었습니다.");
                 break;
 
             case 4:
                 System.out.println("삭제하고 싶은 책ID: ");
                 int id = scanner.nextInt();
                 bookFunction.deleteBooks(id);
+                System.out.println("삭제 완료되었습니다.");
                 break;
             case 5:
                 System.out.println("삭제를 취소하겠습니다.");
