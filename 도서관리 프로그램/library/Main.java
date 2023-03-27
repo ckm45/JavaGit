@@ -87,7 +87,7 @@ public class Main {
                             break;
 
                         case 2:
-
+                        	
                             System.out.println("책 이름: ");
                             String name = scanner.next();
 
