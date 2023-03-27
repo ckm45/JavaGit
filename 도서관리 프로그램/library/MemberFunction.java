@@ -1,71 +1,68 @@
 package com.ckm.library;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import com.ckm.library.csv.MakeList;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemberFunction {
-	Integer backUpId = null;
-	Member backUpMember = null;
-	
-	Map<Integer, Member> members = new HashMap<>();
+    Integer backUpId = null;
+    Member backUpMember = null;
 
-	public Map<Integer, Member> getMembers() {
-		return members;
-	}
+    List<Member> members = new ArrayList<>();
+    List<Member> memberBackUp = new ArrayList<>(1);
 
-	public void setMembers(Map<Integer, Member> members) {
-		this.members = members;
-	}
 
-	public void selectMembers() { // 회원 조회
+    public void selectMembers() { // 회원 조회
 
-		Set<Integer> keySet = members.keySet();
-		for (Integer key : keySet) {
-			System.out.println(members.get(key));
-		}
-	}
+        for (Member member : members) {
+            System.out.println(member.toString());
+        }
 
-	public void addMembers(Member member) { // 회원 등록
-		members.put(member.getMemberId(), member);
-	}
+    }
 
-	public void editMembers(int id, String name, String address, String phoneNumber, String birthday) { // 회원 수정
-		members.get(id).setName(name);
-		members.get(id).setAddress(address);
-		members.get(id).setPhoneNumber(phoneNumber);
-		members.get(id).setBirthday(birthday);
-	}
+    public void addMembers(Member member) { // 회원 등록
+        members.add(member);
+    }
 
-	public void deleteMembers(int id) { // 회원 삭제
-		boolean check = false;
-		backUpId = id;
-		backUpMember = members.get(id);
+    public void editMembers(int id, String name, String address, String phoneNumber,
+            String birthday) { // 회원 수정
+        members.get(id).setName(name);
+        members.get(id).setAddress(address);
+        members.get(id).setPhoneNumber(phoneNumber);
+        members.get(id).setBirthday(birthday);
+    }
 
-		Set<Integer> keySet = members.keySet();
-		for (Integer key : keySet) {
+    public void deleteMembers(int id) { // 회원 삭제
+        boolean check = false;
 
-			if (key == id) {
-				members.remove(key);
-				check = true;
-				break;
-			}
-		}
-		if (check == false) {
-			System.out.println("삭제할 회원이 없습니다.");
-		}
+        for (Member member : members) {
+            if (id == member.getMemberId()) {
+                if (memberBackUp.size() != 0) {
+                    memberBackUp.set(0, member);
+                    members.remove(member);
+                    check = true;
+                    break;
+                } else {
+                    memberBackUp.add(member);
+                    members.remove(member);
+                    check = true;
+                    break;
 
-	}
+                }
+            }
 
-	public void returnMembers() {
-		if (backUpId == null) {
-			System.out.println("복구할 회원이 없습니다.");
-		} else {
-			members.put(backUpId, backUpMember);
-			backUpId = null;
-			backUpMember = null;
-		}
-	}
+
+        }
+        if (check == false) {
+            System.out.println("삭제할 회원이 없습니다.");
+        }
+    }
+
+    public void returnMembers() {
+        if (memberBackUp.size() == 0) {
+            System.out.println("복구할 회원이 없습니다.");
+        } else {
+            members.add(memberBackUp.get(0));
+            memberBackUp.remove(0);
+        }
+    }
 }

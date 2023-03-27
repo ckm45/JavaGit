@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Member {
-    private static int memeberIds;
+
     private int memberId; // id
     private String name; // 이름
     private String address; // 주소
@@ -24,16 +24,24 @@ public class Member {
     SimpleDateFormat dateYear = new SimpleDateFormat("yyyy");
     String year = dateYear.format(date);
 
-    public Member(String name, String address, String phoneNumber, String birthday) {
+
+    public Member(int memberId, String name, String address, String phoneNumber, String birthday) {
+        super();
+        this.memberId = memberId;
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.memberId = memeberIds++;
-        this.startDay = dateFormat.format(date);
         this.birthday = birthday;
-        this.age = Integer.parseInt(year) - Integer.parseInt(birthday.substring(0, 4));
     }
 
+    public int getMemberId() {
+        return memberId;
+    }
+    
+    
+    public void setMemberId(int memberId) {
+        this.memberId = memberId;
+    }
 
     public String getStartDay() {
         return startDay;
@@ -75,9 +83,6 @@ public class Member {
     }
 
 
-    public int getMemberId() {
-        return memberId;
-    }
 
 
     public String getBirthday() {

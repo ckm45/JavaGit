@@ -2,14 +2,15 @@ package com.ckm.library;
 
 
 public class BookInfo {
-    private static int bookIds;
-    private int bookId;
+    private int bookId; // 책 id
     private String bookName; // 책이름
     private String publishDate; // 출판날짜
     private boolean status; // 대출 상태
 
-    public BookInfo(String bookName, String publishDate, boolean status) {
-        this.bookId = bookIds++;
+
+    public BookInfo(int bookId, String bookName, String publishDate, boolean status) {
+
+        this.bookId = bookId;
         this.bookName = bookName;
         this.publishDate = publishDate;
         this.status = status;
@@ -18,6 +19,7 @@ public class BookInfo {
     public String getBookName() {
         return bookName;
     }
+
 
     public void setBookName(String bookName) {
         this.bookName = bookName;
@@ -44,12 +46,15 @@ public class BookInfo {
         return bookId;
     }
 
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
+    }
+
     @Override
     public String toString() {
         return "BookInfo [bookId=" + bookId + ", bookName=" + bookName + ", publishDate="
                 + publishDate + ", status=" + status + "]";
     }
-
 
 
 
