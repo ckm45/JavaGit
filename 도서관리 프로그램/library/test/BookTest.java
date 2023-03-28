@@ -1,10 +1,7 @@
 package com.ckm.library.test;
 
-import java.util.Map;
-
 import com.ckm.library.BookFunction;
 import com.ckm.library.BookInfo;
-import com.ckm.library.csv.Exportlist;
 
 public class BookTest {
     public static void main(String[] args) {
@@ -31,12 +28,12 @@ public class BookTest {
         bookFunction.selectBooks();
         
 
-        System.out.println("자자~");
-        bookFunction.borrowBooks();
-        
-        Exportlist el = new Exportlist();
-        el.exportBook(bookFunction.getBooks());
-        
+//        System.out.println("자자~");
+       
+//        
+//        Exportlist el = new Exportlist();
+//        el.exportBook(bookFunction.getBooks());
+//        
         //el.exportLoan(lm.getList());
     }
 }

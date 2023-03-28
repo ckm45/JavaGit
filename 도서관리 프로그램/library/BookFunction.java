@@ -31,7 +31,7 @@ public class BookFunction {
 
 	public void selectBooks() { // 도서 조회
 		for (BookInfo book : books) {
-			System.out.println(books.toString());
+			System.out.println(book.toString());
 		}
 	}
 	public void selectLoanableBook() {
@@ -41,7 +41,7 @@ public class BookFunction {
 			}			
 		}
 		for (BookInfo book : loanableBooks) {
-			System.out.println(loanableBooks.toString());
+			System.out.println(book.toString());
 		}
 	}
 	

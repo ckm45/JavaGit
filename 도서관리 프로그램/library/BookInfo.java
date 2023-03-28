@@ -1,16 +1,19 @@
 package com.ckm.library;
 
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class BookInfo {
+    private static AtomicInteger BOOKID_GENERATOR = new AtomicInteger(0);
+    
     private int bookId; // 책 id
     private String bookName; // 책이름
     private String publishDate; // 출판날짜
     private boolean status; // 대출 상태
 
 
-    public BookInfo(int bookId, String bookName, String publishDate, boolean status) {
+    public BookInfo(String bookName, String publishDate, boolean status) {
 
-        this.bookId = bookId;
+        this.bookId = BOOKID_GENERATOR.getAndIncrement();
         this.bookName = bookName;
         this.publishDate = publishDate;
         this.status = status;

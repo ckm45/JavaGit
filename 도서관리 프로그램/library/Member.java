@@ -1,11 +1,13 @@
 package com.ckm.library;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Member {
-
+    private static AtomicInteger ID_GENERATOR = new AtomicInteger(0);
+    
+    
     private int memberId; // id
     private String name; // 이름
     private String address; // 주소
@@ -25,9 +27,9 @@ public class Member {
     String year = dateYear.format(date);
 
 
-    public Member(int memberId, String name, String address, String phoneNumber, String birthday) {
-        super();
-        this.memberId = memberId;
+    public Member(String name, String address, String phoneNumber, String birthday) {
+
+        this.memberId = ID_GENERATOR.getAndIncrement();
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
