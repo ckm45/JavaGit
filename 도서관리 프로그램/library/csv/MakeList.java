@@ -13,27 +13,26 @@ public class MakeList {
 
 	CSVReader cr = new CSVReader();
 
-	public List<Map<Integer, Member>> memberlist() {
-        List<List<String>> list = cr.readCSV("member.csv");
-        List<Map<Integer, Member>> memberlist = new ArrayList<>();
-        for (int i = 1; i < list.size(); i++) {
-            List<String> l = list.get(i);
-            Map<Integer, Member> mem = new HashMap<>();
-            mem.put(Integer.parseInt(l.get(0)),new Member(l.get(1), l.get(2), l.get(3), l.get(4)));
-            memberlist.add(mem);
-            
-        }
-        return memberlist;
-    }
-
-	public List<Map<Integer, BookInfo>> booklist() {
-		List<List<String>> list = cr.readCSV("book.csv");
-		List<Map<Integer, BookInfo>> booklist = new ArrayList<>();
+	public List<Member> memberlist() {
+		List<List<String>> list = cr.readCSV("member.csv");
+		List<Member> memberlist = new ArrayList<>();
 		for (int i = 1; i < list.size(); i++) {
 			List<String> l = list.get(i);
-			Map<Integer, BookInfo> mem2 = new HashMap<>();
-			mem2.put(Integer.parseInt(l.get(0)), new BookInfo(l.get(1), l.get(2), Boolean.valueOf(l.get(3))));
-			booklist.add(mem2);
+			Member mem = new Member(l.get(1), l.get(2), l.get(3), l.get(4));
+
+			memberlist.add(mem);
+
+		}
+		return memberlist;
+	}
+
+	public List<BookInfo> booklist() {
+		List<List<String>> list = cr.readCSV("book.csv");
+		List<BookInfo> booklist = new ArrayList<>();
+		for (int i = 1; i < list.size(); i++) {
+			List<String> l = list.get(i);
+			BookInfo book = new BookInfo(l.get(1), l.get(2), Boolean.valueOf(l.get(3));
+			booklist.add(book);
 		}
 
 		return booklist;

@@ -5,8 +5,12 @@ import java.util.List;
 
 public class LoanFunction {
     
-    List<Loan> LoanList = new ArrayList<>();
-       
+    List<Loan> loanList = new ArrayList<>();
+    
+    
+    public void loanStatus(Loan loan) {
+    	
+    }
     
 
 }
