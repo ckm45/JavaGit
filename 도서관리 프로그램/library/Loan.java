@@ -7,28 +7,22 @@ import java.util.Objects;
 public class Loan {
 	private int memberID;
 	private int bookID;
-	private boolean ExtensionAvailable; // 연장 가능여부
-	private int returnPeriod;
-	private Date returnDate;
-
-	public Loan(int memberID, int bookID, boolean extensionAvailable, int returnPeriod) {
-
-		this.memberID = memberID;
-		this.bookID = bookID;
-		ExtensionAvailable = extensionAvailable;
-		this.returnPeriod = returnPeriod;
-	}
+	private boolean extensionAvailable; // 연장 가능여부
+	private String returnDate; //반납일
 
 	public Loan(int memberID, int bookID) {
 		this.memberID = memberID;
 		this.bookID = bookID;
 
 		Date now = new Date();
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(now);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+		this.returnDate = format.format(now);
+		
 		calendar.add(Calendar.DATE, 14);
 		this.returnDate = calendar.getTime();
-
+		this.extensionAvailable = true;
+		
+		
 	}
 
 	public int getMemberID() {

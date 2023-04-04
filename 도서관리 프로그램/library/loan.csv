@@ -1,0 +1,4 @@
+memberID,bookID,returnDate,extensionAvailable
+1,2,2023/04/12,true
+2,3,2023/04/11,true
+3,1,2023/04/05,true
