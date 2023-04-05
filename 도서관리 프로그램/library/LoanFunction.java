@@ -2,14 +2,15 @@ package com.ckm.library;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.ckm.library.csv.MakeList;
 
 public class LoanFunction {
-
-	List<Loan> loanList = new ArrayList<>();
-
+    
+    MakeList makelist = new MakeList();
+    
 	public void loanStatus(Loan loan) {
-    	Loan loan = new Loan(memberID,bookID);    	
-    	
+	    
+	    lis
     	
     }
 

@@ -1,0 +1,4 @@
+bookID,bookName,publishDate,status
+1,자바책,2017/03/02,true
+2,파이썬책,2012/05/16,true
+3,데이터베이스,2010/05/01/true

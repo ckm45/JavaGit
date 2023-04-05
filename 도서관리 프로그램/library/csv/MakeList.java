@@ -39,8 +39,7 @@ public class MakeList {
 		List<Loan> loanlist = new ArrayList<>();
 		for (int i = 1; i < list.size(); i++) {
 			List<String> l = list.get(i);
-			Loan loan = new Loan(Integer.parseInt(l.get(0)), l.get(1), l.get(2), Boolean.valueOf(l.get(3)), l.get(4),
-					Integer.parseInt(l.get(5)), Boolean.valueOf(l.get(6)));
+			Loan loan = new Loan(Integer.parseInt(l.get(0)), Integer.parseInt(l.get(2)));
 			loanlist.add(loan);
 		}
 		return loanlist;
