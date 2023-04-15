@@ -248,6 +248,7 @@ public class Main {
                     Exportlist el = new Exportlist();
                     el.exportMember(memberFunction.getMemberList());
                     el.exportBook(bookFunction.getBookList());
+                    el.exportLoan(loanFunction.getLoanList());  
 
                     return;
 

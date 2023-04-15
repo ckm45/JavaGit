@@ -28,12 +28,13 @@ public class BookFunction {
     public void selectLoanableBook() { // 대출 가능한 책 조회
         for (BookInfo book : books) {
             if (book.isStatus() == true) {
-                loanableBooks.add(book);
+            	System.out.println(book.toString());
+//                loanableBooks.add(book);
             }
         }
-        for (BookInfo book : loanableBooks) {
-            System.out.println(book.toString());
-        }
+//        for (BookInfo book : loanableBooks) {
+//            System.out.println(book.toString());
+//        }
     }
 
     public void loanBook(String name) {           //반납 여부를 false로 바꾼다
