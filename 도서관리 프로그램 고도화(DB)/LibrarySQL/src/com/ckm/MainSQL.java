@@ -1,9 +1,8 @@
 package com.ckm;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -14,7 +13,7 @@ public class MainSQL {
         MemberFunction memberFunction = new MemberFunction();
         BookFunction bookFunction = new BookFunction();
         LoanFunction loanFunction = new LoanFunction();
-
+        Connection conn = ConnectJDBC.getConnection();
         while (true) {
 
 
@@ -246,7 +245,13 @@ public class MainSQL {
                     break;
                 default:
                     System.out.println("종료하겠습니다.");
-
+                    try {
+                        conn.close();
+                        System.out.println("DB 연결 종료");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+       
                     return;
 
             }
