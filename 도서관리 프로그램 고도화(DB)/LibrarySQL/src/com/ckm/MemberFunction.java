@@ -5,8 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 
 public class MemberFunction {
@@ -14,98 +15,174 @@ public class MemberFunction {
     Integer backUpId = null;
     Member backUpMember = null;
 
-
     public void selectMembers() { // 회원 조회
-        String sql = "SELECT * FROM SCOTT.MEMBER";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+        String selectSql = "SELECT * FROM SCOTT.MEMBER";
+        try (PreparedStatement pstmt = conn.prepareStatement(selectSql)) {
             ResultSet rs = pstmt.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnCount = rsmd.getColumnCount();
-            
+
             for (int i = 1; i <= columnCount; i++) {
                 System.out.print(rsmd.getColumnName(i) + "   ");
             }
             System.out.println();
             while (rs.next()) {
-                System.out.println(rs.getString("ID") + " " + rs.getString("NAME") + " " + rs.getString("ADDRESS" )+" "
-                        + rs.getString("PHONENUMBER") + " " + rs.getDate("STARTDATE") + " " + rs.getInt("AGE"));
+                System.out.println(rs.getString("ID") + "   " + rs.getString("NAME") + "   "
+                        + rs.getDate("BIRTHDAY") + "   " + rs.getString("ADDRESS") + "   "
+                        + rs.getString("PHONENUMBER") + "   " + rs.getDate("STARTDATE") + "   "
+                        + rs.getInt("AGE"));
             }
-            
+
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                // 연결 닫기 중 예외가 발생한 경우 처리합니다.
-                e.printStackTrace();
+        }
+    }
+
+
+
+    public void addMembers(Member member) { // 회원 등록
+        String insertSql = "INSERT INTO SCOTT.MEMBER(ID,NAME,ADDRESS,PHONENUMBER,BIRTHDAY) \r\n"
+                + "            VALUES(?,?,?,?,?)";
+
+        String idSql = "SELECT MAX(ID) FROM SCOTT.MEMBER";
+
+
+        try (PreparedStatement pstmt = conn.prepareStatement(insertSql);
+                PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
+            ResultSet rs = pstmt2.executeQuery(); // id 값
+            int nextId = 1;
+            if (rs.next()) {
+                nextId = rs.getInt(1) + 1;
             }
+            pstmt.setString(1,
+                    String.format("%03d", Integer.parseInt(rs.getString("MAX(ID)")) + 1));
+            pstmt.setString(2, member.getName());
+            pstmt.setString(3, member.getAddress());
+            pstmt.setString(4, member.getPhoneNumber());
+            pstmt.setString(5, member.getBirthday());
+
+            int result = pstmt.executeUpdate();
+            System.out.println(result + " rows inserted.");
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
 
     }
 
-//    public void addMembers(Member member) { // 회원 등록
-//        int id = members.get(members.size() - 1).getMemberId() + 1;
-//        member.setMemberId(id);
-//        members.add(member);
-//    }
-//
-//    public void editMembers(int updateNumber, int id, String updateContent) { // 회원 수정
-//        for (Member member : members) {
-//            if (member.getMemberId() == id) {
-//                if (updateNumber == 1) {
-//                    member.setName(updateContent);
-//                } else if (updateNumber == 2) {
-//                    member.setAddress(updateContent);
-//                } else if (updateNumber == 3) {
-//                    member.setPhoneNumber(updateContent);
-//                } else if (updateNumber == 4) {
-//                    member.setBirthday(updateContent);
-//                }
-//
-//            }
-//        }
-//
-//    }
-//
-//
-//    public void deleteMembers(int id) { // 회원 삭제
-//        boolean check = false;
-//
-//        for (Member member : members) {
-//            if (id == member.getMemberId()) {
-//                if (memberBackUp.size() != 0) {
-//                    memberBackUp.set(0, member);
-//                    members.remove(member);
-//                    check = true;
-//                    break;
-//                } else {
-//                    memberBackUp.add(member);
-//                    members.remove(member);
-//                    check = true;
-//                    break;
-//
-//                }
-//            }
-//
-//        }
-//        if (check == false) {
-//            System.out.println("삭제할 회원이 없습니다.");
-//        }
-//    }
-//
-//    public void returnMembers() {
-//        if (memberBackUp.size() == 0) {
-//            System.out.println("복구할 회원이 없습니다.");
-//        } else {
-//            members.add(memberBackUp.get(0));
-//            memberBackUp.remove(0);
-//        }
-//    }
-//
-//    public List<Member> getMemberList() {
-//        return members;
-//    }
+    public void editMembers(int updateNumber, String id, String updateContent) { // 회원 수정
 
+        if (updateNumber == 1) { // 이름 수정
+            String updateNameSQL = "UPDATE SCOTT.MEMBER SET NAME = ? WHERE ID = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(updateNameSQL)) {
+                pstmt.setString(1, updateContent);
+                pstmt.setString(2, id);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (updateNumber == 2) { // 주소 수정
+            String updateAddressSQL = "UPDATE SCOTT.MEMBER SET ADDRESS = ? WHERE ID = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(updateAddressSQL)) {
+                pstmt.setString(1, updateContent);
+                pstmt.setString(2, id);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (updateNumber == 3) {
+            String updatePhoneNumberSQL = "UPDATE SCOTT.MEMBER SET PHONENUMBER = ? WHERE ID = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(updatePhoneNumberSQL)) {
+                pstmt.setString(1, updateContent);
+                pstmt.setString(2, id);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (updateNumber == 4) {
+            String updateBirthdaySQL = "UPDATE SCOTT.MEMBER SET BIRTHDAY = ? WHERE ID = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(updateBirthdaySQL)) {
+                pstmt.setString(1, updateContent);
+                pstmt.setString(2, id);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+    }
+
+
+    public void deleteMembers(String id) { // 회원 삭제
+        // boolean check = false;
+
+        String deleteMembersSQL = "DELETE FROM SCOTT.MEMBER WHERE ID = ?";
+        String backUpInsertSql =
+                "INSERT INTO SCOTT.BACKUP_MEMBER(ID,NAME,BIRTHDAY,ADDRESS,PHONENUMBER,STARTDATE,AGE) \r\n"
+                        + "            VALUES(?,?,?,?,?,?,?)";
+        String selectSql = "SELECT * FROM SCOTT.MEMBER WHERE ID = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(deleteMembersSQL);
+                PreparedStatement pstmt2 = conn.prepareStatement(backUpInsertSql);
+                PreparedStatement pstmt3 = conn.prepareStatement(selectSql)) {
+
+            pstmt3.setString(1, id);
+
+
+            ResultSet rs = pstmt3.executeQuery(); // 컬럼들 조회
+            while (rs.next()) {
+                pstmt2.setString(1, rs.getString("ID")); // 조회된 컬럼들 백업용 테이블에 넣기
+
+                pstmt2.setString(2, rs.getString("NAME"));
+                pstmt2.setDate(3, rs.getDate("BIRTHDAY"));
+                pstmt2.setString(4, rs.getString("ADDRESS"));
+                pstmt2.setString(5, rs.getString("PHONENUMBER"));
+                pstmt2.setDate(6, rs.getDate("STARTDATE"));
+                pstmt2.setInt(7, rs.getInt("AGE"));
+                pstmt2.executeUpdate();
+
+            }
+            pstmt.setString(1, id);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void returnMembers() {
+
+        String selectDeletedMember = "SELECT * FROM SCOTT.BACKUP_MEMBER";
+        String returnMember =
+                "INSERT INTO SCOTT.MEMBER(ID,NAME,BIRTHDAY,ADDRESS,PHONENUMBER,STARTDATE,AGE)\r\n"
+                        + "VALUES(?,?,?,?,?,?,?)";
+        String clearBackUp = "DELETE FROM SCOTT.BACKUP_MEMBER";
+        try (PreparedStatement pstmt = conn.prepareStatement(selectDeletedMember);
+                PreparedStatement pstmt2 = conn.prepareStatement(returnMember);
+                PreparedStatement pstmt3 = conn.prepareStatement(clearBackUp)) {
+            ResultSet rs = pstmt.executeQuery(); // 컬럼들 조회
+
+            // 삭제 취소시키기
+            while (rs.next()) {
+                pstmt2.setString(1, rs.getString("ID"));
+                pstmt2.setString(2, rs.getString("NAME"));
+                pstmt2.setDate(3, rs.getDate("BIRTHDAY"));
+                pstmt2.setString(4, rs.getString("ADDRESS"));
+                pstmt2.setString(5, rs.getString("PHONENUMBER"));
+                pstmt2.setDate(6, rs.getDate("STARTDATE"));
+                pstmt2.setInt(7, rs.getInt("AGE"));
+                pstmt2.executeUpdate();
+
+
+            }
+            pstmt3.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
 }
