@@ -8,6 +8,7 @@ public class MainSQL {
 
     public static void main(String[] args) {
         MemberFunction memberFunction = new MemberFunction();
+        BookFunction bookFunction = new BookFunction();
 
 
         while (true) {
@@ -120,6 +121,7 @@ public class MainSQL {
                             break;
                         case 1:
                             System.out.println("도서조회 화면입니다.");
+                            bookFunction.selectBooks();
 
                             break;
 
@@ -133,31 +135,28 @@ public class MainSQL {
 
                             System.out.println("대출 가능 여부:  true(대출 가능)/ false(대출 불가능)");
                             boolean status = scanner.nextBoolean();
-
+                            BookInfo bookInfo =  new BookInfo(0,name,publishDate,status);
+                            bookFunction.addBooks(bookInfo);
                             System.out.println("등록이 완료되었습니다.");
                             break;
 
                         case 3:
-                            int updateBookNumber = scanner.nextInt();;
+                            System.out.println("책 ID를 입력하세요: ");
+                            String bookId = scanner.next();
+                            System.out.println("바꾸고 싶은 정보를 고르시오");
+                            System.out.println("1.책 이름    2.출판일");
+                            int updateBookNumber = scanner.nextInt();
                             switch (updateBookNumber) {
                                 case 1:
                                     System.out.println("책 이름: ");
                                     String bookName1 = scanner.next();
+                                    bookFunction.editBooks(updateBookNumber, bookId, bookName1);
                                     System.out.println("수정이 완료되었습니다.");
                                     break;
                                 case 2:
                                     System.out.println("출판일: ");
                                     String publishDate1 = scanner.next();
-                                    System.out.println("수정이 완료되었습니다.");
-                                    break;
-                                case 3:
-                                    System.out.println("대출 가능 여부: ");
-                                    boolean status1 = scanner.nextBoolean();
-                                    System.out.println("수정이 완료되었습니다.");
-                                    break;
-                                case 4:
-                                    System.out.println("생일: (년/월/일 형식으로 써주세요.)");
-                                    String birthday1 = scanner.next();
+                                    bookFunction.editBooks(updateBookNumber, bookId, publishDate1);
                                     System.out.println("수정이 완료되었습니다.");
                                     break;
                             }
@@ -166,11 +165,13 @@ public class MainSQL {
 
                         case 4:
                             System.out.println("삭제하고 싶은 책ID: ");
-                            int id = scanner.nextInt();
+                            String  id = scanner.next();
+                            bookFunction.deleteBooks(id);
                             System.out.println("삭제가 완료되었습니다.");
                             break;
                         case 5:
                             System.out.println("삭제를 취소하겠습니다.");
+                            bookFunction.returnBooks();
                             break;
                     }
                     System.out.println("======================================");
