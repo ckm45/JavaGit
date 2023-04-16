@@ -12,8 +12,6 @@ import java.util.Date;
 
 public class MemberFunction {
     Connection conn = ConnectJDBC.getConnection();
-    Integer backUpId = null;
-    Member backUpMember = null;
 
     public void selectMembers() { // 회원 조회
         String selectSql = "SELECT * FROM SCOTT.MEMBER";

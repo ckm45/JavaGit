@@ -1,70 +1,173 @@
 package com.ckm;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import com.ckm.library.Loan;
-import com.ckm.library.csv.MakeList;
 
 public class LoanFunction {
-    MakeList makelist = new MakeList();
-    List<Loan> loans = makelist.loanlist();
+    Connection conn = ConnectJDBC.getConnection();
 
     // 대출이력 조회
-    public void selectLoanStatus(String name) {
-        for (Loan loan : loans) {
-            if (loan.getMemberName().equals(name)) {
-                System.out.println(loan.toString());
-            }
-        }
+    public void selectLoanStatus(String memberID) {
+        String selectSql =
+                "SELECT * FROM (SELECT LOAN.LOANID,LOAN.MEMBERID,LOAN.BOOKID,MEMBER.NAME ,BOOK.BOOKNAME, LOAN.LOANDATE,LOAN.RETURNDATE,LOAN.EXTENSIONAVAILABLE FROM MEMBER,BOOK,LOAN  WHERE LOAN.MEMBERID=MEMBER.ID AND LOAN.BOOKID=BOOK.BOOKID) WHERE MEMBERID = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(selectSql)) {
+            pstmt.setString(1, memberID);
+            ResultSet rs = pstmt.executeQuery(); // id 값
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnCount = rsmd.getColumnCount();
 
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.print(rsmd.getColumnName(i) + "  ");
+            }
+            System.out.println();
+
+            while (rs.next()) {
+                System.out.println(rs.getString("LOANID") + "\t\t" + rs.getString("MEMBERID")
+                        + "\t\t " + rs.getString("BOOKID") + "\t\t" + rs.getString("NAME") + "\t"
+                        + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE") + "\t"
+                        + rs.getDate("RETURNDATE") + "\t" + rs.getString("EXTENSIONAVAILABLE"));
+            }
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     // 책을 대출합니다.
     public void laonBook(Loan loan) {
         int id = 0;
-        for (Loan l : loans) {
-            id = Math.max(id, l.getLoanID() + 1); // ??
-        }
-        loan.setLoanID(id);
-        loans.add(loan);
-    }
 
+        String insertLoan =
+                "INSERT INTO LOAN(LOANID,MEMBERID,BOOKID,EXTENSIONAVAILABLE) VALUES(?,?,?,?)";
+        String idSql = "SELECT MAX(LOANID) FROM SCOTT.LOAN";
+        try (PreparedStatement pstmt = conn.prepareStatement(insertLoan);
+                PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
+            ResultSet rs = pstmt2.executeQuery(); // id 값
+            int nextId = 1;
+            if (rs.next()) {
+                nextId = rs.getInt(1) + 1;
+            }
+            pstmt.setString(1,
+                    String.format("%03d", Integer.parseInt(rs.getString("MAX(LOANID)")) + 1));
+            pstmt.setString(2, loan.getMemberId());
+            pstmt.setString(3, loan.getBookId());
+            pstmt.setString(4, loan.isExtensionAvailable() ? "T" : "F");
+
+
+            int result = pstmt.executeUpdate();
+            System.out.println(result + " rows inserted.");
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
     // 연장가능한 책 조회
 
-    public boolean loanStatus(String name) {
+    public boolean loanStatus(String loanedMemberID) {
         boolean result = false;
-        for (Loan loan : loans) {
+        String wholeLoan =
+                "SELECT LOAN.LOANID,LOAN.MEMBERID,LOAN.BOOKID,MEMBER.NAME ,BOOK.BOOKNAME, LOAN.LOANDATE,LOAN.RETURNDATE,\r\n"
+                        + " LOAN.EXTENSIONAVAILABLE FROM MEMBER,BOOK,LOAN\r\n"
+                        + " WHERE LOAN.MEMBERID=MEMBER.ID AND LOAN.BOOKID=BOOK.BOOKID AND EXTENSIONAVAILABLE ='T' ";
+        try (PreparedStatement pstmt = conn.prepareStatement(wholeLoan)) {
+            ResultSet rs = pstmt.executeQuery(); // 이 중에 memberID가 있나 확인
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnCount = rsmd.getColumnCount();
 
-            if (loan.isExtensionAvailable() && loan.getMemberName().equals(name)) {
-                 //&& loan.isRenewStatus()
-                result = true;
-                System.out.println(loan.toString());
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.print(rsmd.getColumnName(i) + "  ");
             }
+            System.out.println();
+            while (rs.next()) {
+
+
+                if (loanedMemberID.equals(rs.getString("MEMBERID"))) {
+                    result = true;
+                    System.out.println(rs.getString("LOANID") + "\t\t" + rs.getString("MEMBERID")
+                            + "\t\t " + rs.getString("BOOKID") + "\t\t" + rs.getString("NAME")
+                            + "\t" + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE") + "\t"
+                            + rs.getDate("RETURNDATE") + "\t" + rs.getString("EXTENSIONAVAILABLE"));
+
+                }
+
+            }
+            return result;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return result;
     }
 
     // 대출 연장
-    public boolean loanExtention(String memberName, String bookName) {
+    public boolean loanExtension(String memberId, String bookId) {
         boolean result = false;
-        for (Loan loan : loans) {
-            if (loan.getMemberName().equals(memberName) && loan.getBookName().equals(bookName)) {
+        String wholeLoan = "SELECT * FROM LOAN WHERE EXTENSIONAVAILABLE = 'T'";
+        String extensionSql =
+                "UPDATE LOAN SET RETURNDATE=RETURNDATE+7 WHERE MEMBERID=? AND BOOKID=? AND EXTENSIONAVAILABLE='T'";
+        String updateExtension =
+                "UPDATE LOAN SET EXTENSIONAVAILABLE = 'F' WHERE MEMBERID=? AND BOOKID=?";
+        try (PreparedStatement pstmt = conn.prepareStatement(extensionSql);
+                PreparedStatement pstmt2 = conn.prepareStatement(updateExtension);
+                PreparedStatement pstmt3 = conn.prepareStatement(wholeLoan)) {
+            pstmt.setString(1, memberId);
+            pstmt.setString(2, bookId);
+            ResultSet rs = pstmt.executeQuery(); // 이 중에 memberID가 있나 확인
+            while (rs.next()) {
                 result = true;
-                LocalDate date = LocalDate.parse(loan.getReturnDate(), DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-                date = date.plusDays(7);
-                String newDateString = date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-                loan.setExtensionAvailable(result);
-                loan.setReturnDate(newDateString);
-                break;
-                            
+                pstmt2.setString(1, memberId);
+                pstmt2.setString(2, bookId);
+                pstmt2.executeUpdate();
             }
+            if (result) {
+                pstmt3.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return result;
     }
-    
-    public List<Loan> getLoanList() {
-        return loans;
-    }
 
+    // 반납
+    public void returnBook(String returnBookId) {
+        String selectLoan = "SELECT * FROM LOAN WHERE BOOKID = ?";
+        String deleteLoan = "DELETE FROM LOAN WHERE  BOOKID = ?";
+        String updateBookLoan = "UPDATE BOOK SET STATUS = 'T' WHERE BOOKID = ? ";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(selectLoan);
+                PreparedStatement pstmt2 = conn.prepareStatement(deleteLoan);
+                PreparedStatement pstmt3 = conn.prepareStatement(updateBookLoan)) {
+
+            // 대여 목록에서 선택한 책 정보 조회
+            pstmt.setString(1, returnBookId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                // 선택한 책이 대여 목록에 있으면 대출 정보 삭제
+                pstmt2.setString(1, returnBookId);
+                pstmt2.executeUpdate();
+
+                // book table의 해당 행의 available을 True로 변경
+                pstmt3.setString(1, returnBookId);
+                pstmt3.executeUpdate();
+                System.out.println("반납 완료되었습니다.");
+
+            } else {
+                // 선택한 책이 대출 목록에 없으면 메시지 출력
+                System.out.println("선택하신 책이 대출 목록에 없습니다.");
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 }

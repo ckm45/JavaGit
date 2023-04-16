@@ -1,15 +1,19 @@
 package com.ckm;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Scanner;
+
 
 public class MainSQL {
 
     public static void main(String[] args) {
         MemberFunction memberFunction = new MemberFunction();
         BookFunction bookFunction = new BookFunction();
-
+        LoanFunction loanFunction = new LoanFunction();
 
         while (true) {
 
@@ -135,7 +139,7 @@ public class MainSQL {
 
                             System.out.println("대출 가능 여부:  true(대출 가능)/ false(대출 불가능)");
                             boolean status = scanner.nextBoolean();
-                            BookInfo bookInfo =  new BookInfo(0,name,publishDate,status);
+                            BookInfo bookInfo = new BookInfo(0, name, publishDate, status);
                             bookFunction.addBooks(bookInfo);
                             System.out.println("등록이 완료되었습니다.");
                             break;
@@ -165,7 +169,7 @@ public class MainSQL {
 
                         case 4:
                             System.out.println("삭제하고 싶은 책ID: ");
-                            String  id = scanner.next();
+                            String id = scanner.next();
                             bookFunction.deleteBooks(id);
                             System.out.println("삭제가 완료되었습니다.");
                             break;
@@ -187,28 +191,53 @@ public class MainSQL {
                             break;
                         case 1:
                             System.out.println("대출가능한 도서를 조회합니다.");
+                            bookFunction.selectLoanableBook();
                             break;
                         case 2:
-                            System.out.println("현재 대출 이력을 조회합니다.");
+                            System.out.println("대출 이력을 확인하고 싶은 회원의 번호를 입력하시오.");
+                            String memberID = scanner.next();
+                            loanFunction.selectLoanStatus(memberID);
                             break;
                         case 3:
                             System.out.println("도서 대출을 신청합니다.");
-                            System.out.println("대출할 회원의 ID를 입력하시오. ");
-                            int loanMemberID = scanner.nextInt();
-                            System.out.println("대출할 도서 제목을 입력하시오. ");
-                            String loanBookName = scanner.next();
+                            System.out.println("대출할 회원의 번호를 입력하시오. ");
+                            String loanMemberId = scanner.next();
+
+                            System.out.println("대출가능한 책 목록입니다. ");
+                            bookFunction.selectLoanableBook();
+                            System.out.println("대출할 도서 번호를 입력하시오. ");
+                            String loanBookId = scanner.next();
+
+                            Loan newloan = new Loan(0, loanMemberId, loanBookId, false);
+                            loanFunction.laonBook(newloan);
+                            bookFunction.loanBook(loanBookId);
+                            System.out.println("대출이 완료되었습니다.");
+
                             break;
                         case 4:
                             System.out.println("도서 연장을 신청합니다.");
                             System.out.println("대출한 회원의 ID를 입력하시오. ");
-                            int loanedMemberID = scanner.nextInt();
-                            System.out.println("대출한 도서 제목을 입력하시오. ");
-                            String loanedBookName = scanner.next();
+                            String loanedMemberID = scanner.next();
+                            if (loanFunction.loanStatus(loanedMemberID)) {
+                                System.out.println("연장 가능한 책 목록입니다.");
+                                System.out.println("책 ID를 입력하시오.");
+                                String loanedBookID = scanner.next();
+                                if (loanFunction.loanExtension(loanedMemberID, loanedBookID)) {
+                                    System.out.println("연장이 완료되었습니다.");
+
+                                } else {
+                                    System.out.println("연장 가능한 책이 없습니다.");
+                                }
+                            } else {
+                                System.out.println("연장 신청 가능한 목록이 없습니다.");
+                            }
                             break;
                         case 5:
                             System.out.println("도서 반납를 반납합니다.");
-                            System.out.println("반납할 도서 제목을 입력하시오. ");
-                            String ReturnBookName = scanner.next();
+                            System.out.println("반납할 책 번호를 입력하시오. ");
+                            String returnBookId = scanner.next();
+                            loanFunction.returnBook(returnBookId);
+
                             System.out.println("반납이 완료되었습니다.");
                             break;
                     }

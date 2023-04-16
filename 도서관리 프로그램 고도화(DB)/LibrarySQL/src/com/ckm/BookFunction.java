@@ -8,10 +8,6 @@ import java.sql.SQLException;
 
 public class BookFunction {
     Connection conn = ConnectJDBC.getConnection();
-    Integer backUpId = null;
-    Member backUpMember = null;
-
-
 
     public void selectBooks() { // 도서 조회
         String selectSql = "SELECT * FROM SCOTT.BOOK";
@@ -61,10 +57,10 @@ public class BookFunction {
 
     }
 
-    public void loanBook(String name) { // 반납 여부를 false로 바꾼다
-        String updateStatus = "UPDATE SCOTT.BOOK SET STATUS = 'F' WHERE BOOKNAME = ?";
+    public void loanBook(String id) { // 반납 여부를 false로 바꾼다
+        String updateStatus = "UPDATE SCOTT.BOOK SET STATUS = 'F' WHERE BOOKID = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(updateStatus)) {
-            pstmt.setString(1, name);
+            pstmt.setString(1, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
