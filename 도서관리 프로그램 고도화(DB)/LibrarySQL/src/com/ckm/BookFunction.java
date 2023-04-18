@@ -10,7 +10,7 @@ public class BookFunction {
     Connection conn = ConnectJDBC.getConnection();
 
     public void selectBooks() { // 도서 조회
-        String selectSql = "SELECT * FROM SCOTT.BOOK";
+        String selectSql = "SELECT * FROM SCOTT.BOOK ORDER BY BOOKID";
         try (PreparedStatement pstmt = conn.prepareStatement(selectSql)) {
             ResultSet rs = pstmt.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -35,7 +35,7 @@ public class BookFunction {
 
     //
     public void selectLoanableBook() { // 대출 가능한 책 조회
-        String selectLoanable = "SELECT * FROM SCOTT.BOOK WHERE STATUS = 'T'";
+        String selectLoanable = "SELECT * FROM SCOTT.BOOK WHERE STATUS = 'T' ORDER BY BOOKID";
         try (PreparedStatement pstmt = conn.prepareStatement(selectLoanable)) {
             ResultSet rs = pstmt.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -69,20 +69,20 @@ public class BookFunction {
 
     public void addBooks(BookInfo bookInfo) { // 책 등록
         String insertSql =
-                "INSERT INTO SCOTT.BOOK(BOOKID,BOOKNAME,PUBLISHDATE,STATUS) VALUES(LPAD(BOOK_SEQ.NEXTVAL,3,'0'),?,?,?,?)";
+                "INSERT INTO SCOTT.BOOK(BOOKID,BOOKNAME,PUBLISHDATE,STATUS) VALUES(LPAD(BOOK_SEQ.NEXTVAL,3,'0'),?,?,?)";
         String idSql = "SELECT MAX(BOOKID) FROM SCOTT.BOOK";
-        try (PreparedStatement pstmt = conn.prepareStatement(insertSql);
-                PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
-            ResultSet rs = pstmt2.executeQuery(); // id 값
-            int nextId = 1;
-            if (rs.next()) {
-                nextId = rs.getInt(1) + 1;
-            }
-            pstmt.setString(1,
-                    String.format("%03d", Integer.parseInt(rs.getString("MAX(BOOKID)")) + 1));
-            pstmt.setString(2, bookInfo.getBookName());
-            pstmt.setString(3, bookInfo.getPublishDate());
-            pstmt.setString(4, bookInfo.isStatus() ? "T" : "F");
+        try (PreparedStatement pstmt = conn.prepareStatement(insertSql)){
+                //PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
+//            ResultSet rs = pstmt2.executeQuery(); // id 값
+//            int nextId = 1;
+//            if (rs.next()) {
+//                nextId = rs.getInt(1) + 1;
+//            }
+//            pstmt.setString(1,
+//                    String.format("%03d", Integer.parseInt(rs.getString("MAX(BOOKID)")) + 1));
+            pstmt.setString(1, bookInfo.getBookName());
+            pstmt.setString(2, bookInfo.getPublishDate());
+            pstmt.setString(3, bookInfo.isStatus() ? "T" : "F");
 
             int result = pstmt.executeUpdate();
             System.out.println(result + " rows inserted.");

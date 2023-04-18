@@ -133,7 +133,7 @@ public class MainSQL {
                             System.out.println("책 이름: ");
                             String name = scanner.next();
 
-                            System.out.println("출판일: (년/월/일 형식으로 써주세요.");
+                            System.out.println("출판일: (년/월/일) 형식으로 써주세요.");
                             String publishDate = scanner.next();
 
                             System.out.println("대출 가능 여부:  true(대출 가능)/ false(대출 불가능)");

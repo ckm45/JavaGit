@@ -14,7 +14,7 @@ public class MemberFunction {
     Connection conn = ConnectJDBC.getConnection();
 
     public void selectMembers() { // 회원 조회
-        String selectSql = "SELECT * FROM SCOTT.MEMBER";
+        String selectSql = "SELECT * FROM SCOTT.MEMBER ORDER BY ID";
         try (PreparedStatement pstmt = conn.prepareStatement(selectSql)) {
             ResultSet rs = pstmt.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
