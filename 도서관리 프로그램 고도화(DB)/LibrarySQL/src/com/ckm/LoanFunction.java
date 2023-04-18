@@ -45,20 +45,21 @@ public class LoanFunction {
         int id = 0;
 
         String insertLoan =
-                "INSERT INTO LOAN(LOANID,MEMBERID,BOOKID,EXTENSIONAVAILABLE) VALUES(?,?,?,?)";
-        String idSql = "SELECT MAX(LOANID) FROM SCOTT.LOAN";
-        try (PreparedStatement pstmt = conn.prepareStatement(insertLoan);
-                PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
-            ResultSet rs = pstmt2.executeQuery(); // id 값
-            int nextId = 1;
-            if (rs.next()) {
-                nextId = rs.getInt(1) + 1;
-            }
-            pstmt.setString(1,
-                    String.format("%03d", Integer.parseInt(rs.getString("MAX(LOANID)")) + 1));
-            pstmt.setString(2, loan.getMemberId());
-            pstmt.setString(3, loan.getBookId());
-            pstmt.setString(4, loan.isExtensionAvailable() ? "T" : "F");
+                "INSERT INTO LOAN(LOANID,MEMBERID,BOOKID,EXTENSIONAVAILABLE) VALUES(LPAD(LOAN_SEQ.NEXTVAL,3,'0'),?,?,?)";
+        
+        String idSql = "SELECT *  FROM SCOTT.LOAN";
+        try (PreparedStatement pstmt = conn.prepareStatement(insertLoan)){
+                //PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
+            //ResultSet rs = pstmt2.executeQuery(); // id 값
+            //int nextId = 1;
+            //if (rs.next()) {
+            //    nextId = rs.getInt(1) + 1;
+            //}
+//            pstmt.setString(1,LOANID);
+//                    String.format("%03d", Integer.parseInt(rs.getString("")) + 1));
+            pstmt.setString(1, loan.getMemberId());
+            pstmt.setString(2, loan.getBookId());
+            pstmt.setString(3, loan.isExtensionAvailable() ? "T" : "F");
 
 
             int result = pstmt.executeUpdate();
