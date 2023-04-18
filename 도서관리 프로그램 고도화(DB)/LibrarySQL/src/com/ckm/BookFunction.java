@@ -68,9 +68,8 @@ public class BookFunction {
     }
 
     public void addBooks(BookInfo bookInfo) { // 책 등록
-        String insertSql = "INSERT INTO SCOTT.BOOK(BOOKID,BOOKNAME,PUBLISHDATE,STATUS) \r\n"
-                + "VALUES(?,?,?,?)";
-
+        String insertSql =
+                "INSERT INTO SCOTT.BOOK(BOOKID,BOOKNAME,PUBLISHDATE,STATUS) VALUES(LPAD(BOOK_SEQ.NEXTVAL,3,'0'),?,?,?,?)";
         String idSql = "SELECT MAX(BOOKID) FROM SCOTT.BOOK";
         try (PreparedStatement pstmt = conn.prepareStatement(insertSql);
                 PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {

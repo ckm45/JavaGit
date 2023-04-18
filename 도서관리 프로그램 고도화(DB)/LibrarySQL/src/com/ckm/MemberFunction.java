@@ -40,25 +40,27 @@ public class MemberFunction {
 
 
     public void addMembers(Member member) { // 회원 등록
-        String insertSql = "INSERT INTO SCOTT.MEMBER(ID,NAME,ADDRESS,PHONENUMBER,BIRTHDAY) \r\n"
-                + "            VALUES(?,?,?,?,?)";
+
+        String insertSql =
+                "INSERT INTO SCOTT.MEMBER(ID,NAME,ADDRESS,PHONENUMBER,BIRTHDAY) VALUES(LPAD(MEMBER_SEQ.NEXTVAL,3,'0'),?,?,?,?)";
+        
 
         String idSql = "SELECT MAX(ID) FROM SCOTT.MEMBER";
 
 
-        try (PreparedStatement pstmt = conn.prepareStatement(insertSql);
-                PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
-            ResultSet rs = pstmt2.executeQuery(); // id 값
-            int nextId = 1;
-            if (rs.next()) {
-                nextId = rs.getInt(1) + 1;
-            }
-            pstmt.setString(1,
-                    String.format("%03d", Integer.parseInt(rs.getString("MAX(ID)")) + 1));
-            pstmt.setString(2, member.getName());
-            pstmt.setString(3, member.getAddress());
-            pstmt.setString(4, member.getPhoneNumber());
-            pstmt.setString(5, member.getBirthday());
+        try (PreparedStatement pstmt = conn.prepareStatement(insertSql)){
+//                PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
+//            ResultSet rs = pstmt2.executeQuery(); // id 값
+//            int nextId = 1;
+//            if (rs.next()) {
+//                nextId = rs.getInt(1) + 1;
+//            }
+//            pstmt.setString(1,
+//                    String.format("%03d", Integer.parseInt(rs.getString("MAX(ID)")) + 1));
+            pstmt.setString(1, member.getName());
+            pstmt.setString(2, member.getAddress());
+            pstmt.setString(3, member.getPhoneNumber());
+            pstmt.setString(4, member.getBirthday());
 
             int result = pstmt.executeUpdate();
             System.out.println(result + " rows inserted.");
