@@ -28,8 +28,8 @@ public class LoanFunction {
             System.out.println();
 
             while (rs.next()) {
-                System.out.println(rs.getString("LOANID") + "\t\t" + rs.getString("MEMBERID")
-                        + "\t\t " + rs.getString("BOOKID") + "\t\t" + rs.getString("NAME") + "\t"
+                System.out.println(rs.getString("LOANID") + "\t" + rs.getString("MEMBERID")
+                        + "\t " + rs.getString("BOOKID") + "\t" + rs.getString("NAME") + "\t"
                         + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE") + "\t"
                         + rs.getDate("RETURNDATE") + "\t" + rs.getString("EXTENSIONAVAILABLE"));
             }
@@ -47,7 +47,7 @@ public class LoanFunction {
         String insertLoan =
                 "INSERT INTO LOAN(LOANID,MEMBERID,BOOKID,EXTENSIONAVAILABLE) VALUES(LPAD(LOAN_SEQ.NEXTVAL,3,'0'),?,?,?)";
         
-        String idSql = "SELECT *  FROM SCOTT.LOAN";
+        //String idSql = "SELECT *  FROM SCOTT.LOAN";
         try (PreparedStatement pstmt = conn.prepareStatement(insertLoan)){
                 //PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
             //ResultSet rs = pstmt2.executeQuery(); // id 값
@@ -91,8 +91,8 @@ public class LoanFunction {
 
                 if (loanedMemberID.equals(rs.getString("MEMBERID"))) {
                     result = true;
-                    System.out.println(rs.getString("LOANID") + "\t\t" + rs.getString("MEMBERID")
-                            + "\t\t " + rs.getString("BOOKID") + "\t\t" + rs.getString("NAME")
+                    System.out.println(rs.getString("LOANID") + "\t" + rs.getString("MEMBERID")
+                            + "\t " + rs.getString("BOOKID") + "\t" + rs.getString("NAME")
                             + "\t" + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE") + "\t"
                             + rs.getDate("RETURNDATE") + "\t" + rs.getString("EXTENSIONAVAILABLE"));
 
@@ -110,26 +110,48 @@ public class LoanFunction {
     // 대출 연장
     public boolean loanExtension(String memberId, String bookId) {
         boolean result = false;
-        String wholeLoan = "SELECT * FROM LOAN WHERE EXTENSIONAVAILABLE = 'T'";
+        String loanedSql = "SELECT LOAN.LOANID,LOAN.MEMBERID,LOAN.BOOKID,MEMBER.NAME ,BOOK.BOOKNAME, LOAN.LOANDATE,LOAN.RETURNDATE,\r\n"
+                + " LOAN.EXTENSIONAVAILABLE FROM MEMBER,BOOK,LOAN\r\n"
+                + " WHERE LOAN.MEMBERID=MEMBER.ID AND LOAN.BOOKID=BOOK.BOOKID AND EXTENSIONAVAILABLE ='F' ";
         String extensionSql =
                 "UPDATE LOAN SET RETURNDATE=RETURNDATE+7 WHERE MEMBERID=? AND BOOKID=? AND EXTENSIONAVAILABLE='T'";
         String updateExtension =
                 "UPDATE LOAN SET EXTENSIONAVAILABLE = 'F' WHERE MEMBERID=? AND BOOKID=?";
         try (PreparedStatement pstmt = conn.prepareStatement(extensionSql);
                 PreparedStatement pstmt2 = conn.prepareStatement(updateExtension);
-                PreparedStatement pstmt3 = conn.prepareStatement(wholeLoan)) {
+                PreparedStatement pstmt3 = conn.prepareStatement(loanedSql)){
+               // ; PreparedStatement pstmt3 = conn.prepareStatement(wholeLoan)) {
             pstmt.setString(1, memberId);
             pstmt.setString(2, bookId);
-            ResultSet rs = pstmt.executeQuery(); // 이 중에 memberID가 있나 확인
-            while (rs.next()) {
+//            ResultSet rs = pstmt3.executeQuery(); // 이 중에 memberID가 있나 확인
+//            while (rs.next()) {
                 result = true;
+                pstmt.setString(1, memberId);
+                pstmt.setString(2, bookId);
+                pstmt.executeUpdate();
+                
                 pstmt2.setString(1, memberId);
                 pstmt2.setString(2, bookId);
                 pstmt2.executeUpdate();
-            }
-            if (result) {
-                pstmt3.executeUpdate();
-            }
+
+                ResultSet rs = pstmt3.executeQuery(); // id 값
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int columnCount = rsmd.getColumnCount();
+
+                for (int i = 1; i <= columnCount; i++) {
+                    System.out.print(rsmd.getColumnName(i) + "  ");
+                }
+                System.out.println();
+
+                while (rs.next()) {
+                    System.out.println(rs.getString("LOANID") + "\t" + rs.getString("MEMBERID")
+                            + "\t " + rs.getString("BOOKID") + "\t" + rs.getString("NAME") + "\t"
+                            + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE") + "\t"
+                            + rs.getDate("RETURNDATE") + "\t" + rs.getString("EXTENSIONAVAILABLE"));
+                }
+//            if (result) {
+//                pstmt2.executeQuery();
+//            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

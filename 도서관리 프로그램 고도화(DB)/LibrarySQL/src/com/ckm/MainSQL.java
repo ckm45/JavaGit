@@ -207,7 +207,7 @@ public class MainSQL {
                             System.out.println("대출할 도서 번호를 입력하시오. ");
                             String loanBookId = scanner.next();
 
-                            Loan newloan = new Loan(0, loanMemberId, loanBookId, false);
+                            Loan newloan = new Loan(0, loanMemberId, loanBookId, true);
                             loanFunction.laonBook(newloan);
                             bookFunction.loanBook(loanBookId);
                             System.out.println("대출이 완료되었습니다.");
@@ -237,7 +237,6 @@ public class MainSQL {
                             String returnBookId = scanner.next();
                             loanFunction.returnBook(returnBookId);
 
-                            System.out.println("반납이 완료되었습니다.");
                             break;
                     }
                     System.out.println("======================================");
