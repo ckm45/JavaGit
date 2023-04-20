@@ -235,11 +235,11 @@ public class MainSQL {
                             System.out.println("회원 번호를 입력하시오. ");
                             String returnMemberId = scanner.next();
                             if (loanFunction.returnBookStatus(returnMemberId)) {
-                                System.out.println("");
-                                System.out.println("도서 반납를 반납합니다.");
+                                System.out.println("도서를 반납합니다.");
                                 loanFunction.selectLoanStatus();
                                 System.out.println("반납할 책 번호를 입력하시오. ");
                                 String returnBookId = scanner.next();
+
                                 loanFunction.returnBook(returnBookId);
 
                             } else {

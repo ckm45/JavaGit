@@ -27,6 +27,7 @@ public class LoanFunction {
             System.out.println();
 
             while (rs.next()) {
+
                 System.out.println(rs.getString("LOANID") + "\t" + rs.getString("MEMBERID") + "\t "
                         + rs.getString("BOOKID") + "\t" + rs.getString("NAME") + "\t"
                         + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE") + "\t"
@@ -42,7 +43,7 @@ public class LoanFunction {
 
 
     // 대출이력 조회 (특정 사람)
-    public void selectLoanStatus(String  memberID) {
+    public void selectLoanStatus(String memberID) {
         String selectSql =
                 "SELECT * FROM (SELECT LOAN.LOANID,LOAN.MEMBERID,LOAN.BOOKID,MEMBER.NAME ,BOOK.BOOKNAME, LOAN.LOANDATE,LOAN.RETURNDATE,LOAN.EXTENSIONAVAILABLE FROM MEMBER,BOOK,LOAN  WHERE LOAN.MEMBERID=MEMBER.ID AND LOAN.BOOKID=BOOK.BOOKID) WHERE MEMBERID = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(selectSql)) {
@@ -53,18 +54,21 @@ public class LoanFunction {
 
 
 
-            if (rs.next()) {
-                for (int i = 1; i <= columnCount; i++) {
-                    System.out.print(rsmd.getColumnName(i) + "  ");
-                }
-                System.out.println();
+            while (rs.next()) {
+                if (rs.next()) {
+                    for (int i = 1; i <= columnCount; i++) {
+                        System.out.print(rsmd.getColumnName(i) + "  ");
+                    }
+                    System.out.println();
 
-                System.out.println(rs.getString("LOANID") + "\t" + rs.getString("MEMBERID") + "\t "
-                        + rs.getString("BOOKID") + "\t" + rs.getString("NAME") + "\t"
-                        + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE") + "\t"
-                        + rs.getDate("RETURNDATE") + "\t" + rs.getString("EXTENSIONAVAILABLE"));
-            } else {
-                System.out.println("대출한 책이 없습니다.");
+                    System.out.println(rs.getString("LOANID") + "\t" + rs.getString("MEMBERID")
+                            + "\t " + rs.getString("BOOKID") + "\t" + rs.getString("NAME") + "\t"
+                            + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE") + "\t"
+                            + rs.getDate("RETURNDATE") + "\t" + rs.getString("EXTENSIONAVAILABLE"));
+                } else {
+                    System.out.println("대출한 책이 없습니다.");
+                
+                }
             }
 
 
@@ -199,7 +203,9 @@ public class LoanFunction {
         String selectLoan = "SELECT * FROM LOAN";
         try (PreparedStatement pstmt = conn.prepareStatement(selectLoan)) {
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
+            rs.next();
+            // memberID != returnMemberId
+            if (rs.getString("MEMBERID").equals(returnMemberId)) {
                 result = true;
             } else {
                 result = false;
