@@ -52,17 +52,17 @@ public class LoanFunction {
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnCount = rsmd.getColumnCount();
 
-
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.print(rsmd.getColumnName(i) + "\t ");
+            }
+            System.out.println();
 
             while (rs.next()) {
-                if (rs.next()) {
-                    for (int i = 1; i <= columnCount; i++) {
-                        System.out.print(rsmd.getColumnName(i) + "  ");
-                    }
-                    System.out.println();
+                if (rs.getString(2).equals(memberID)) {
 
-                    System.out.println(rs.getString("LOANID") + "\t" + rs.getString("MEMBERID")
-                            + "\t " + rs.getString("BOOKID") + "\t" + rs.getString("NAME") + "\t"
+
+                    System.out.println(rs.getString("LOANID") + "\t \t  " + rs.getString("MEMBERID")
+                            + "\t\t\t" + rs.getString("BOOKID") + "\t\t" + rs.getString("NAME") + "  \t\t"
                             + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE") + "\t"
                             + rs.getDate("RETURNDATE") + "\t" + rs.getString("EXTENSIONAVAILABLE"));
                 } else {
