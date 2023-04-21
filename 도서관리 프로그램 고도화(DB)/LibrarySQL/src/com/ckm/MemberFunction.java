@@ -5,9 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 
 public class MemberFunction {
@@ -42,21 +39,14 @@ public class MemberFunction {
     public void addMembers(Member member) { // 회원 등록
 
         String insertSql =
-                "INSERT INTO SCOTT.MEMBER(ID,NAME,ADDRESS,PHONENUMBER,BIRTHDAY) VALUES(LPAD(MEMBER_SEQ.NEXTVAL,3,'0'),?,?,?,?)";
+                "INSERT INTO SCOTT.MEMBER(ID,NAME,ADDRESS,PHONENUMBER,BIRTHDAY)"
+                + " VALUES(LPAD(MEMBER_SEQ.NEXTVAL,3,'0'),?,?,?,?)";
         
 
         String idSql = "SELECT MAX(ID) FROM SCOTT.MEMBER";
 
 
         try (PreparedStatement pstmt = conn.prepareStatement(insertSql)){
-//                PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
-//            ResultSet rs = pstmt2.executeQuery(); // id 값
-//            int nextId = 1;
-//            if (rs.next()) {
-//                nextId = rs.getInt(1) + 1;
-//            }
-//            pstmt.setString(1,
-//                    String.format("%03d", Integer.parseInt(rs.getString("MAX(ID)")) + 1));
             pstmt.setString(1, member.getName());
             pstmt.setString(2, member.getAddress());
             pstmt.setString(3, member.getPhoneNumber());
@@ -91,7 +81,7 @@ public class MemberFunction {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        } else if (updateNumber == 3) {
+        } else if (updateNumber == 3) { //전화 번호 수정
             String updatePhoneNumberSQL = "UPDATE SCOTT.MEMBER SET PHONENUMBER = ? WHERE ID = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(updatePhoneNumberSQL)) {
                 pstmt.setString(1, updateContent);
@@ -100,7 +90,7 @@ public class MemberFunction {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        } else if (updateNumber == 4) {
+        } else if (updateNumber == 4) { //생일 수정
             String updateBirthdaySQL = "UPDATE SCOTT.MEMBER SET BIRTHDAY = ? WHERE ID = ?";
             try (PreparedStatement pstmt = conn.prepareStatement(updateBirthdaySQL)) {
                 pstmt.setString(1, updateContent);

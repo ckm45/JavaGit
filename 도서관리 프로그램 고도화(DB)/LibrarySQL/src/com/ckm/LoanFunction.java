@@ -5,17 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class LoanFunction {
     Connection conn = ConnectJDBC.getConnection();
 
 
     public void selectLoanStatus() {
-        String selectSql =
-                "SELECT * FROM (SELECT LOAN.LOANID,LOAN.MEMBERID,LOAN.BOOKID,MEMBER.NAME ,BOOK.BOOKNAME, LOAN.LOANDATE,LOAN.RETURNDATE,LOAN.EXTENSIONAVAILABLE FROM MEMBER,BOOK,LOAN  WHERE LOAN.MEMBERID=MEMBER.ID AND LOAN.BOOKID=BOOK.BOOKID)";
+        String selectSql = "SELECT * FROM "
+                + "(SELECT LOAN.LOANID,LOAN.MEMBERID,LOAN.BOOKID,MEMBER.NAME ,BOOK.BOOKNAME, LOAN.LOANDATE,LOAN.RETURNDATE,LOAN.EXTENSIONAVAILABLE "
+                + "FROM MEMBER,BOOK,LOAN "
+                + "WHERE LOAN.MEMBERID=MEMBER.ID AND LOAN.BOOKID=BOOK.BOOKID)";
         try (PreparedStatement pstmt = conn.prepareStatement(selectSql)) {
             ResultSet rs = pstmt.executeQuery(); // id 값
             ResultSetMetaData rsmd1 = rs.getMetaData();
@@ -62,12 +61,13 @@ public class LoanFunction {
 
 
                     System.out.println(rs.getString("LOANID") + "\t \t  " + rs.getString("MEMBERID")
-                            + "\t\t\t" + rs.getString("BOOKID") + "\t\t" + rs.getString("NAME") + "  \t\t"
-                            + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE") + "\t"
-                            + rs.getDate("RETURNDATE") + "\t" + rs.getString("EXTENSIONAVAILABLE"));
+                            + "\t\t\t" + rs.getString("BOOKID") + "\t\t" + rs.getString("NAME")
+                            + "  \t\t" + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE")
+                            + "\t" + rs.getDate("RETURNDATE") + "\t"
+                            + rs.getString("EXTENSIONAVAILABLE"));
                 } else {
                     System.out.println("대출한 책이 없습니다.");
-                
+
                 }
             }
 
@@ -85,16 +85,7 @@ public class LoanFunction {
         String insertLoan =
                 "INSERT INTO LOAN(LOANID,MEMBERID,BOOKID,EXTENSIONAVAILABLE) VALUES(LPAD(LOAN_SEQ.NEXTVAL,3,'0'),?,?,?)";
 
-        // String idSql = "SELECT * FROM SCOTT.LOAN";
         try (PreparedStatement pstmt = conn.prepareStatement(insertLoan)) {
-            // PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
-            // ResultSet rs = pstmt2.executeQuery(); // id 값
-            // int nextId = 1;
-            // if (rs.next()) {
-            // nextId = rs.getInt(1) + 1;
-            // }
-            // pstmt.setString(1,LOANID);
-            // String.format("%03d", Integer.parseInt(rs.getString("")) + 1));
             pstmt.setString(1, loan.getMemberId());
             pstmt.setString(2, loan.getBookId());
             pstmt.setString(3, loan.isExtensionAvailable() ? "T" : "F");
@@ -159,11 +150,9 @@ public class LoanFunction {
         try (PreparedStatement pstmt = conn.prepareStatement(extensionSql);
                 PreparedStatement pstmt2 = conn.prepareStatement(updateExtension);
                 PreparedStatement pstmt3 = conn.prepareStatement(loanedSql)) {
-            // ; PreparedStatement pstmt3 = conn.prepareStatement(wholeLoan)) {
             pstmt.setString(1, memberId);
             pstmt.setString(2, bookId);
-            // ResultSet rs = pstmt3.executeQuery(); // 이 중에 memberID가 있나 확인
-            // while (rs.next()) {
+
             result = true;
             pstmt.setString(1, memberId);
             pstmt.setString(2, bookId);
@@ -188,9 +177,7 @@ public class LoanFunction {
                         + rs.getString("BOOKNAME") + "\t" + rs.getDate("LOANDATE") + "\t"
                         + rs.getDate("RETURNDATE") + "\t" + rs.getString("EXTENSIONAVAILABLE"));
             }
-            // if (result) {
-            // pstmt2.executeQuery();
-            // }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -233,22 +220,6 @@ public class LoanFunction {
         try (PreparedStatement pstmt = conn.prepareStatement(selectLoan);
                 PreparedStatement pstmt2 = conn.prepareStatement(deleteLoan);
                 PreparedStatement pstmt3 = conn.prepareStatement(updateBookLoan)) {
-            // ;PreparedStatement pstmt4 = conn.prepareStatement(selectAllLoan)) {
-            // ResultSet rs1 = pstmt4.executeQuery(); // id 값
-            // ResultSetMetaData rsmd1 = rs1.getMetaData();
-            // int columnCount = rsmd1.getColumnCount();
-            //
-            // for (int i = 1; i <= columnCount; i++) {
-            // System.out.print(rsmd1.getColumnName(i) + " ");
-            // }
-            // System.out.println();
-            //
-            // while (rs1.next()) {
-            // System.out.println(rs1.getString("LOANID") + "\t" + rs1.getString("MEMBERID")
-            // + "\t " + rs1.getString("BOOKID") + "\t" + rs1.getString("NAME") + "\t"
-            // + rs1.getString("BOOKNAME") + "\t" + rs1.getDate("LOANDATE") + "\t"
-            // + rs1.getDate("RETURNDATE") + "\t" + rs1.getString("EXTENSIONAVAILABLE"));
-            // }
             // 대여 목록에서 선택한 책 정보 조회
             pstmt.setString(1, returnBookId);
             ResultSet rs = pstmt.executeQuery();

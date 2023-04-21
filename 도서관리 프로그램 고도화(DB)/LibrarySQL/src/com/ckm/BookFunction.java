@@ -71,15 +71,7 @@ public class BookFunction {
         String insertSql =
                 "INSERT INTO SCOTT.BOOK(BOOKID,BOOKNAME,PUBLISHDATE,STATUS) VALUES(LPAD(BOOK_SEQ.NEXTVAL,3,'0'),?,?,?)";
         String idSql = "SELECT MAX(BOOKID) FROM SCOTT.BOOK";
-        try (PreparedStatement pstmt = conn.prepareStatement(insertSql)){
-                //PreparedStatement pstmt2 = conn.prepareStatement(idSql)) {
-//            ResultSet rs = pstmt2.executeQuery(); // id 값
-//            int nextId = 1;
-//            if (rs.next()) {
-//                nextId = rs.getInt(1) + 1;
-//            }
-//            pstmt.setString(1,
-//                    String.format("%03d", Integer.parseInt(rs.getString("MAX(BOOKID)")) + 1));
+        try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
             pstmt.setString(1, bookInfo.getBookName());
             pstmt.setString(2, bookInfo.getPublishDate());
             pstmt.setString(3, bookInfo.isStatus() ? "T" : "F");
