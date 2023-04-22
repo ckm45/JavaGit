@@ -44,7 +44,10 @@ public class LoanFunction {
     // 대출이력 조회 (특정 사람)
     public void selectLoanStatus(String memberID) {
         String selectSql =
-                "SELECT * FROM (SELECT LOAN.LOANID,LOAN.MEMBERID,LOAN.BOOKID,MEMBER.NAME ,BOOK.BOOKNAME, LOAN.LOANDATE,LOAN.RETURNDATE,LOAN.EXTENSIONAVAILABLE FROM MEMBER,BOOK,LOAN  WHERE LOAN.MEMBERID=MEMBER.ID AND LOAN.BOOKID=BOOK.BOOKID) WHERE MEMBERID = ?";
+                "SELECT * FROM "
+                + "(SELECT LOAN.LOANID,LOAN.MEMBERID,LOAN.BOOKID,MEMBER.NAME ,BOOK.BOOKNAME, LOAN.LOANDATE,LOAN.RETURNDATE,LOAN.EXTENSIONAVAILABLE "
+                + "FROM MEMBER,BOOK,LOAN  WHERE LOAN.MEMBERID=MEMBER.ID AND LOAN.BOOKID=BOOK.BOOKID)"
+                + " WHERE MEMBERID = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(selectSql)) {
             pstmt.setString(1, memberID);
             ResultSet rs = pstmt.executeQuery(); // id 값
@@ -212,7 +215,10 @@ public class LoanFunction {
     // 반납
     public void returnBook(String returnBookId) {
         String selectAllLoan =
-                "SELECT * FROM (SELECT LOAN.LOANID,LOAN.MEMBERID,LOAN.BOOKID,MEMBER.NAME ,BOOK.BOOKNAME, LOAN.LOANDATE,LOAN.RETURNDATE,LOAN.EXTENSIONAVAILABLE FROM MEMBER,BOOK,LOAN  WHERE LOAN.MEMBERID=MEMBER.ID AND LOAN.BOOKID=BOOK.BOOKID)";
+                "SELECT * FROM (SELECT LOAN.LOANID,LOAN.MEMBERID,LOAN.BOOKID,MEMBER.NAME ,BOOK.BOOKNAME, "
+                + "LOAN.LOANDATE,LOAN.RETURNDATE,LOAN.EXTENSIONAVAILABLE "
+                + "FROM MEMBER,BOOK,LOAN  "
+                + "WHERE LOAN.MEMBERID=MEMBER.ID AND LOAN.BOOKID=BOOK.BOOKID)";
         String selectLoan = "SELECT * FROM LOAN WHERE BOOKID = ?";
         String deleteLoan = "DELETE FROM LOAN WHERE  BOOKID = ?";
         String updateBookLoan = "UPDATE BOOK SET STATUS = 'T' WHERE BOOKID = ? ";
