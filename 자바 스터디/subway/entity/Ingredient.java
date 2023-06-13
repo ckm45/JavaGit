@@ -4,6 +4,12 @@ public class Ingredient {
     private String name;
     private int calorie;
 
+    @Override
+    public String toString() {
+        return "Ingredient [name=" + name + ", calorie=" + calorie + "]";
+    }
+
+
     public Ingredient(String name, int calorie) {
 
         this.name = name;
