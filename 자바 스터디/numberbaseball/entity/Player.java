@@ -1,27 +1,25 @@
 package com.numberbaseball.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Player extends Game{
-
-    private int life;
+public class Player {
+    private List<String> numberList = new ArrayList<>();
     
-    public Player(List<String> numberList,int life) {
-        super(numberList);
-        this.life = life;
+    
+    
+    public Player(List<String> numberList) {
+       
+        this.numberList = numberList;
     }
 
-    public int getLife() {
-        return life;
+    public List<String> getNumberList() {
+        return numberList;
     }
 
-    public void setLife(int life) {
-        this.life = life;
+    public void setNumberList(List<String> numberList) {
+        this.numberList = numberList;
     }
-
-
     
     
-    
-
 }
