@@ -1,10 +1,11 @@
 package com.subway.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Sandwich {
-    private List<Ingredient> ingredients;
-    private int totalCalorie;
+    private List<Ingredient> ingredients = new ArrayList<>();
+    private int totalCalorie = 0;
 
 
 
@@ -26,6 +27,10 @@ public class Sandwich {
 
     public void setTotalCalorie(int totalCalorie) {
         this.totalCalorie = totalCalorie;
+    
     }
+
+
+    
 
 }

@@ -1,16 +1,18 @@
 package com.subway.view;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import com.subway.domain.Cook;
 import com.subway.entity.Bread;
+import com.subway.entity.Sandwich;
 import com.subway.entity.Source;
 import com.subway.entity.Vegetable;
 
 public class Run {
     
-    public static void main(String[] args) {        
+    public static void main(String[] args) {
+        Cook cook = new Cook();
         List<Bread> breadList = new ArrayList<>();
         breadList.add(new Bread("화이트",200));
         breadList.add(new Bread("위트",150));
@@ -42,6 +44,15 @@ public class Run {
                 System.out.println(bread);
             }
             String breadName = scanner.nextLine();
+            
+            for(Bread bread : breadList) {
+                if(bread.getName().equals(breadName)) {
+                    cook.addIngredient(bread);   
+                    
+                }
+            }
+            
+            
             //Bread bread = new Bread(breadName);
             // 야채 조회 메소드
 
@@ -52,7 +63,11 @@ public class Run {
                     System.out.println(vegetable);
                 }
                 String vegetableName = scanner.nextLine();
-                
+                for(Vegetable vegetable: vegetableList) {
+                    if(vegetable.getName() .equals(vegetableName)) {
+                        cook.addIngredient(vegetable);                    
+                    }
+                }
                 System.out.println("그만 넣으시겠습니까? yes(1) no(2)");
                 int loopexit = Integer.parseInt(scanner.nextLine());
                 if (loopexit == 1) {
@@ -67,10 +82,14 @@ public class Run {
                 System.out.println(source);
             }
             String sourceName = scanner.nextLine();
-
-
-            System.out.println("다 합쳐서 총 ~~ 입니다.");
-            break;09
+            for(Source source: sourceList) {
+                if(source.getName().equals(sourceName)) {
+                    cook.addIngredient(source);                    
+                }
+            }
+            
+            cook.printMenu();     
+            break;
 
 
         }

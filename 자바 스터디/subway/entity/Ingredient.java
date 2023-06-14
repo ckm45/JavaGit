@@ -1,5 +1,7 @@
 package com.subway.entity;
 
+import java.util.Objects;
+
 public class Ingredient {
     private String name;
     private int calorie;
@@ -9,6 +11,11 @@ public class Ingredient {
         return "Ingredient [name=" + name + ", calorie=" + calorie + "]";
     }
 
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(calorie, name);
+    }
 
     public Ingredient(String name, int calorie) {
 
