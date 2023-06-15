@@ -33,17 +33,17 @@ public class GameImpl implements GameRepository {
     @Override
     public void check(Computer computer) {
         //makeAnswer(computer);
-        System.out.println(!(computer.getNumberList().get(0).equals(computer.getNumberList().get(1))));
-        System.out.println(!(computer.getNumberList().get(0).equals(computer.getNumberList().get(2))));
-        System.out.println(!(computer.getNumberList().get(1).equals(computer.getNumberList().get(2))));
-        System.out.println(computer.getNumberList().get(0));
-        System.out.println(computer.getNumberList().get(1));
-        System.out.println(computer.getNumberList().get(2));
+        //System.out.println(!(computer.getNumberList().get(0).equals(computer.getNumberList().get(1))));
+        //System.out.println(!(computer.getNumberList().get(0).equals(computer.getNumberList().get(2))));
+//        System.out.println(!(computer.getNumberList().get(1).equals(computer.getNumberList().get(2))));
+//        System.out.println(computer.getNumberList().get(0));
+//        System.out.println(computer.getNumberList().get(1));
+//        System.out.println(computer.getNumberList().get(2));
         
         if (!(computer.getNumberList().get(0).equals(computer.getNumberList().get(1)))
                 && !(computer.getNumberList().get(0).equals(computer.getNumberList().get(2)))
                 && !(computer.getNumberList().get(1).equals(computer.getNumberList().get(2)))) {
-            
+            Run.comCheck = true;
         } else {
             makeAnswer(computer);
         }
@@ -56,8 +56,8 @@ public class GameImpl implements GameRepository {
         List<String> userNumber = user.getNumberList();
         List<String> comNumber = computer.getNumberList();
         
-        System.out.println(comNumber);
-        System.out.println(user.getNumberList());
+        //System.out.println(comNumber);
+        //System.out.println(user.getNumberList());
         
         // 123 user
         // 421 computer

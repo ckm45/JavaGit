@@ -16,11 +16,13 @@ public class Run {
         System.out.println("숫자야구 게임을 시작합니다.");
         GameImpl gameImpl = new GameImpl();
         
+        while(!comCheck) {
         //컴퓨터 숫자를 받아오는 메소드
         gameImpl.makeAnswer(computer);
         //리스트 만들고 그걸 set으로 바꿔 그 set 길이가 3이면 맞고 아니면 다시 만들게끔 
         gameImpl.check(computer);
-        System.out.println(computer.getNumberList());
+        }
+      //  System.out.println(computer.getNumberList());
       
         while(!isExit) { 
             
