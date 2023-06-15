@@ -14,6 +14,7 @@ public interface GameRepository {
     void lose();
     
     void check(Computer computer);
-
+    
+    void convertString(String number, User user);
     
 }

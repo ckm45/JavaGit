@@ -3,7 +3,9 @@ package com.numberbaseball.entity;
 import java.util.List;
 
 public class User extends Player{
-
+    public User() {
+        
+    }
     private int life;
     
     public User(List<String> numberList,int life) {

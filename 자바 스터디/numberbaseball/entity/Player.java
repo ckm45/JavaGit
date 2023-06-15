@@ -6,7 +6,9 @@ import java.util.List;
 public class Player {
     private List<String> numberList = new ArrayList<>();
     
-    
+    public Player() {
+        
+    }
     
     public Player(List<String> numberList) {
        
