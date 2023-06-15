@@ -8,7 +8,10 @@ import com.numberbaseball.entity.User;
 
 public class GameImpl implements GameRepository {
 
-
+    int countStrike = 0;
+    int countBall = 0;
+    
+    @Override
     public void makeAnswer(Computer computer) {
         Random random = new Random();
 
@@ -29,7 +32,7 @@ public class GameImpl implements GameRepository {
         if (!(computer.getNumberList().get(0).equals(computer.getNumberList().get(1)))
                 && !(computer.getNumberList().get(0).equals(computer.getNumberList().get(2)))
                 && !(computer.getNumberList().get(1).equals(computer.getNumberList().get(2)))) {
-
+            
         } else {
             makeAnswer(computer);
         }
@@ -41,8 +44,7 @@ public class GameImpl implements GameRepository {
 
         List<String> userNumber = user.getNumberList();
         List<String> comNumber = computer.getNumberList();
-        int countStrike = 0;
-        int countBall = 0;
+
         // 123 user
         // 421 computer
 
@@ -57,6 +59,19 @@ public class GameImpl implements GameRepository {
                 }
             }
         }
+        
+        if(countStrike == 3) {
+            win();
+        }
+        else if(countStrike == 0 && countBall == 0) {
+            System.out.println("낫싱");
+        }
+        else{
+            System.out.printf("%d볼 %d 스트라이크", countBall, countStrike);
+            
+        }
+        
+        
     }
 
 
